@@ -1,0 +1,95 @@
+
+Sub VBAChallenge():
+
+    ' dimensions
+    Dim total As Double
+    Dim i As Long
+    Dim change As Double
+    Dim j As Integer
+    Dim start As Long
+    Dim rowCount As Long
+    Dim percentageChange As Double
+    Dim days As Integer
+    Dim dailyChange As Double
+    Dim averageChange As Double
+    Dim ws As Worksheet
+    
+    For Each ws In Worksheets
+        ' values
+        j = 0
+        total = 0
+        change = 0
+        start = 2
+        dailyChange = 0
+
+        ' set column headers
+        ws.Range("I1").Value = "Ticker"
+        ws.Range("J1").Value = "Yearly Change"
+        ws.Range("K1").Value = "Percent Change"
+        ws.Range("L1").Value = "Total Stock Volume"
+        ws.Range("P1").Value = "Ticker"
+        ws.Range("Q1").Value = "Ticker"
+        ws.Range("O2").Value = "Greatest % Increase"
+        ws.Range("O3").Value = "Greatest % Decrease"
+        ws.Range("O4").Value = "Greatest Total Volume"
+
+         ' retrieve number of last row
+        rowCount = Cells(Rows.Count, "A").End(xlUp).Row
+
+        For i = 2 To rowCount
+
+         ' check for ticker change
+         If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+               ' store results
+               total = total + ws.Cells(i, 7).Value
+
+               ' zero totals
+               If total = 0 Then
+
+               ' run results
+                ws.Range("I" & 2 + j).Value = Cells(i, 1).Value
+                ws.Range("J" & 2 + j).Value = 0
+                ws.Range("K" & 2 + j).Value = "%" & 0
+                ws.Range("L" & 2 + j).Value = 0
+
+            Else
+                ' first number greater than zero
+                If Cells(start, 3) = 0 Then
+                  For find_value = start To i
+                    If Cells(find_value, 3).Value <> 0 Then
+                      start = find_value
+                      Exit For
+                    End If
+                  Next find_value
+            End If
+
+            ' change calculation
+            change = (Cells(i, 6) - Cells(start, 3))
+            percentChange = Round((change / Cells(start, 3) * 100), 2)
+ 
+            ' next ticker
+            start = i + 1
+
+            ' run results
+            ws.Range("I" & 2 + j).Value = Cells(i, 1).Value
+            ws.Range("J" & 2 + j).Value = Round(change, 2)
+            ws.Range("K" & 2 + j).Value = "%" & percentChange
+            ws.Range("L" & 2 + j).Value = total
+
+        End If
+    
+    ' variable reset
+        total = 0
+        change = 0
+        j = j + 1
+        days = 0
+
+    ' add if ticker same
+    Else
+        total = total + Cells(i, 7).Value
+    End If
+
+  Next i
+
+End Sub

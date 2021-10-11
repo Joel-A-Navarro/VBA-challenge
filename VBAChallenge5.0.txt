@@ -1,0 +1,55 @@
+Sub homework_two_test()
+
+  ' variables
+  Dim ticker As String
+  Dim yearlyChange As Double
+  Dim percentChange As Double
+  Dim totalStockVolume As Double
+  
+ 
+' column names
+  Cells(1, 9).Value = "Ticker"
+  Cells(1, 10).Value = "Yearly Change"
+  Cells(1, 11).Value = "Percent Change"
+  Cells(1, 12).Value = "Total Stock Volume"
+ 
+  ' initialize counter
+  j = 2
+  total = 0
+  change = 0
+  start = 2
+    
+   ' retrieve number of last row
+  lastRow = Cells(Rows.Count, 1).End(xlUp).Row
+   
+   ' loop through each row
+   For i = 2 To lastRow
+   
+     ' check for ticker change
+     If Cells(i + 1, 1).Value <> Cells(i, 1) Then
+     totalStockVolume = totalStockVolume + Cells(i, 7).Value
+      ' change calculation
+      change = (Cells(i, 6) - Cells(start, 3))
+      percentChange = Round((change / Cells(start, 3)), 2)
+    
+       ' print results to summary table
+        Range("I" & j).Value = Cells(i, 1).Value
+        Range("J" & j).Value = change
+        Range("K" & j).Value = percentChange
+        Range("L" & j).Value = totalStockVolume
+        
+        j = j + 1
+        totalStockVolume = 0
+        start = i + 1
+        
+     Else
+        ' starting value that is not 0
+        totalStockVolume = totalStockVolume + Cells(i, 7).Value
+        
+    
+End If
+     
+
+Next i
+ 
+End Sub
